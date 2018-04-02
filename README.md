@@ -1,4 +1,4 @@
-# HexletEducation-SD
+# HexletEducation-DS
 Задание по СД урок m2e0.
 Реализация iterator класса ArrayList
 
