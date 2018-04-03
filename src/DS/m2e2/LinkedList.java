@@ -97,7 +97,7 @@ public class LinkedList<T> implements List<T> {
    			 item != null; 
    			 item = item.getNextItem()) {
     		if (o.equals(item.element)) { 
-    			remove(item);
+    			remove(item);    			
     			return true; 
     		}
 			i++;
@@ -178,9 +178,8 @@ public class LinkedList<T> implements List<T> {
 
 
     private void remove(final Item current) {
-        // BEGIN (write your solution here)
-    	// 1 element
-    	if(this.firstInList == this.lastInList) { 
+        // BEGIN (write your solution here)    	
+    	if(this.firstInList == this.lastInList) { // once element
     		this.firstInList = this.lastInList = null;
     	} else if (this.firstInList == current) {
 			current.getNextItem().prevItem = null;
@@ -190,6 +189,7 @@ public class LinkedList<T> implements List<T> {
 			current.getNextItem().prevItem = current.getPrevItem();
 			current.getPrevItem().nextItem = current.getNextItem();
 		}
+    	size--;
         // END
     }
 
@@ -361,7 +361,7 @@ public class LinkedList<T> implements List<T> {
                 throw new IllegalStateException();
         	
         	Item<T> lastNext = lastReturnedItemFromIterator.nextItem;        	
-        	LinkedList.this.remove(index);
+        	LinkedList.this.remove(lastReturnedItemFromIterator);
         	if(currentItemInIterator == lastReturnedItemFromIterator) {
         		currentItemInIterator = lastNext;
         	}
