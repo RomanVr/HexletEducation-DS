@@ -2,6 +2,7 @@ package hexlet.m2e0;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -148,7 +149,6 @@ public class ArrayList<T> implements List<T> {
 	throw new UnsupportedOperationException();
     }
 
-    int i = 1;
     @Override
     public void add(final int index, final T element) {
 	    if (index > size || index < 0) throw new IndexOutOfBoundsException();
@@ -198,7 +198,17 @@ public class ArrayList<T> implements List<T> {
     private class ElementsIterator implements ListIterator<T> {
 
         private static final int LAST_IS_NOT_SET = -1;
+        
+        /**
+         * Index of element to be returned by subsequent call to next.
+         */
         private int index;
+        
+        /**
+         * Index of element returned by most recent call to next or
+         * previous.  Reset to -1 if this element is deleted by a call
+         * to remove.
+         */
         private int lastIndex = LAST_IS_NOT_SET;
 
 	    public ElementsIterator() {
@@ -207,7 +217,7 @@ public class ArrayList<T> implements List<T> {
 
 	    public ElementsIterator(final int index) {
 	        // BEGIN (write your solution here)
-	        
+	        this.index = index;
 	        // END
 	    }
 
@@ -227,6 +237,14 @@ public class ArrayList<T> implements List<T> {
         // . 1 . 2 . 8 ^ 3 . 4. 5
 	    public void add(final T element) {
             // BEGIN (write your solution here)
+	        try {
+	        	int i = index;
+	        	ArrayList.this.add(i, element);
+	        	this.lastIndex = LAST_IS_NOT_SET;
+	        	index =  i + 1;
+	        } catch (IndexOutOfBoundsException e) {
+	        	throw new ConcurrentModificationException();
+			}
 	        
             // END
 	    }
@@ -234,36 +252,50 @@ public class ArrayList<T> implements List<T> {
 	    @Override
 	    public void set(final T element) {
 	        // BEGIN (write your solution here)
-            
+	    	if (this.lastIndex < 0)
+                throw new IllegalStateException();
+	    	
+	    	try {
+	    		ArrayList.this.set(lastIndex, element);	    		
+	    	} catch (IndexOutOfBoundsException e) {
+				throw new ConcurrentModificationException();
+			}
             // END
 	    }
  	
 	    @Override
 	    public int previousIndex() {
 	        // BEGIN (write your solution here)
-	        return -1;
+	        return this.index - 1;
 	        // END
 	    }
 	
 	    @Override
 	    public int nextIndex() {
 	        // BEGIN (write your solution here)
-	        return -1;
+	        return this.index;
 	        // END
 	    }
 
 	    @Override
 	    public boolean hasPrevious() {
 	        // BEGIN (write your solution here)
-	        return false;
+	        return this.index != 0;
 	        // END
 	    }
 
 	    @Override
 	    public T previous() {
 	        // BEGIN (write your solution here)
-            return null;
-	        // END
+	    	try {
+	    		int i = index - 1;
+	    		T elementPrevious = ArrayList.this.get(i);
+	    		this.lastIndex = index = i;
+	    		return elementPrevious;
+	    	} catch (IndexOutOfBoundsException e) {
+				throw new NoSuchElementException();
+			}
+            // END
 	    }
 	
 	    @Override
