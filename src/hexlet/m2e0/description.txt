@@ -1,0 +1,78 @@
+	Реализация iterator класса ArrayList
+×
+В этом тесте Вам предстоит самостоятельно и детально изучить документацию класса ListIterator.
+
+https://docs.oracle.com/javase/8/docs/api/java/util/ListIterator.html
+
+Обратите внимание, что ListIterator наследуется от простого Iterator, а соответственно за базу можно взять реализацию итератора, которая уже была сделана нами в прошлых заданиях. Вам лишь необходимо разобраться и реализовать все недостающие методы. В точности с документацией.
+
+Важно:
+
+обратите внимание на исключения, которые кидают методы.
+Ваша реализация должна в точности следовать спецификации документации.
+всегда думайте, как Ваша реализация будет себя вести в "граничных" случаях, например, что будет, если вызвать метод previous() для пустой коллекции и т.д.
+методы ListIterator тесно взаимодействуют между собой.
+Дополнительная информация:
+
+пример реализации реального ListIterator из OpenJDK
+
+http://hg.openjdk.java.net/jdk8u/jdk8u-dev/jdk/file/c5d02f908fb2/src/share/classes/java/util/AbstractList.java#l390
+
+задание необходимо реализовать в классе ArrayList.java
+тесты можно посмотреть в классе ArrayListTest.java
+		
+	
+	
+	Итератор для списков, который позволяет программисту перемещаться по списку в любом направлении, 
+изменять список во время итерации и получать текущую позицию итератора в списке. 
+У ListIterator нет текущего элемента; его позиция курсора всегда находится между элементом, 
+который будет возвращен вызовом previous () и элементом, который будет возвращен вызовом next (). 
+Итератор для списка длины n имеет n + 1 возможных положений курсора.
+
+	Обратите внимание, что методы remove () и set (Object) не определены в терминах позиции курсора; 
+они определены для работы с последним элементом, возвращаемым вызовом next () или previous ().
+
+Modifier and Type	Method and Description
+void				add(E e)
+Inserts the specified element into the list (optional operation).
+Throws:
+UnsupportedOperationException - if the add method is not supported by this list iterator
+ClassCastException - if the class of the specified element prevents it from being added to this list
+IllegalArgumentException - if some aspect of this element prevents it from being added to this list
+
+boolean				hasNext()
+Returns true if this list iterator has more elements when traversing the list in the forward direction.
+Возвращает true, если этот итератор списка имеет больше элементов при перемещении списка в прямом направлении.
+
+boolean				hasPrevious()
+Returns true if this list iterator has more elements when traversing the list in the reverse direction.
+Возвращает true, если этот итератор списка имеет больше элементов при перемещении списка в обратном направлении.
+
+E					next()
+Returns the next element in the list and advances the cursor position.
+Возвращает следующий элемент в списке и продвигает позицию курсора.
+
+int					nextIndex()
+Returns the index of the element that would be returned by a subsequent call to next().
+Возвращает индекс элемента, который будет возвращен последующим вызовом next ().
+
+E					previous()
+Returns the previous element in the list and moves the cursor position backwards.
+Возвращает предыдущий элемент в списке и перемещает позицию курсора назад.
+
+int					previousIndex()
+Returns the index of the element that would be returned by a subsequent call to previous().
+Возвращает индекс элемента, который будет возвращен последующим вызовом previous ().
+
+void				remove()
+Removes from the list the last element that was returned by next() or previous() (optional operation).
+Удаляет из списка последний элемент, который был возвращен next() или previous() (дополнительная операция).
+
+void				set(E e)
+Replaces the last element returned by next() or previous() with the specified element (optional operation).
+Заменяет последний элемент, возвращаемый next() или previous() на указанный элемент (необязательная операция).
+Throws:
+UnsupportedOperationException - if the set operation is not supported by this list iterator
+ClassCastException - if the class of the specified element prevents it from being added to this list
+IllegalArgumentException - if some aspect of the specified element prevents it from being added to this list
+IllegalStateException - if neither next nor previous have been called, or remove or add have been called after the last call to next or previous
