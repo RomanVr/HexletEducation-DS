@@ -1,11 +1,11 @@
 package DS.m2e2;
 
 import java.util.List;
+
+import static org.hamcrest.CoreMatchers.nullValue;
+
 import java.util.Collection;
 import java.util.NoSuchElementException;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.util.ListIterator;
 import java.util.Iterator;
 
@@ -179,15 +179,21 @@ public class LinkedList<T> implements List<T> {
 
     private void remove(final Item current) {
         // BEGIN (write your solution here)    	
-    	if(this.firstInList == this.lastInList) { // once element
+    	if(this.firstInList == this.lastInList) { // once item
     		this.firstInList = this.lastInList = null;
-    	} else if (this.firstInList == current) {
+    	} else if (this.firstInList == current) { //delete first item
 			current.getNextItem().prevItem = null;
-		} else if (this.lastInList == current) {
+			this.firstInList = current.getNextItem();
+			current.nextItem = null;
+		} else if (this.lastInList == current) {// delete last item
 			current.getPrevItem().nextItem = null;
-		} else {
+			this.lastInList = current.getPrevItem();
+			current.prevItem = null;
+		} else {			
 			current.getNextItem().prevItem = current.getPrevItem();
 			current.getPrevItem().nextItem = current.getNextItem();
+			current.nextItem = null;
+			current.prevItem = null;
 		}
     	size--;
         // END
@@ -285,6 +291,10 @@ public class LinkedList<T> implements List<T> {
         private Item<T> lastReturnedItemFromIterator;
 
         private int index;
+        
+        public ElementsIterator() {
+        	this(0);
+        }
 
         public ElementsIterator(final int index) {
             // BEGIN (write your solution here)
@@ -296,13 +306,15 @@ public class LinkedList<T> implements List<T> {
         @Override
         public boolean hasNext() {
             // BEGIN (write your solution here)
-            return index != LinkedList.this.size;
+            return index < LinkedList.this.size;
             // END
         }
 
         @Override
         public T next() {
             // BEGIN (write your solution here)
+        	if (!hasNext()) { throw new NoSuchElementException(); }
+        	
             lastReturnedItemFromIterator = currentItemInIterator;
             currentItemInIterator = currentItemInIterator.getNextItem();
             index++;
@@ -320,6 +332,8 @@ public class LinkedList<T> implements List<T> {
         @Override
         public T previous() {
             // BEGIN (write your solution here)
+        	if (!hasPrevious()) { throw new NoSuchElementException(); }
+        	
         	lastReturnedItemFromIterator = (currentItemInIterator == null) ? LinkedList.this.lastInList : currentItemInIterator.getPrevItem();
             currentItemInIterator = lastReturnedItemFromIterator;
             index--;
@@ -335,7 +349,8 @@ public class LinkedList<T> implements List<T> {
         @Override
         public void set(final T element) {
             // BEGIN (write your solution here)
-        	LinkedList.this.set(index, element);
+        	if (lastReturnedItemFromIterator == null) { throw new IllegalStateException(); }
+        	lastReturnedItemFromIterator.element = element;
             // END
         }
 
@@ -357,8 +372,7 @@ public class LinkedList<T> implements List<T> {
         @Override
         public void remove() {
             // BEGIN (write your solution here)
-        	if (lastReturnedItemFromIterator == null)
-                throw new IllegalStateException();
+        	if (lastReturnedItemFromIterator == null) { throw new IllegalStateException(); }
         	
         	Item<T> lastNext = lastReturnedItemFromIterator.nextItem;        	
         	LinkedList.this.remove(lastReturnedItemFromIterator);
