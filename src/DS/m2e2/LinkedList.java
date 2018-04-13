@@ -2,8 +2,6 @@ package DS.m2e2;
 
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.nullValue;
-
 import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.ListIterator;
